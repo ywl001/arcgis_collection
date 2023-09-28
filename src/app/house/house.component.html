@@ -1,0 +1,39 @@
+<div class="root">
+    <h1>{{data.building_name}}</h1>
+    <div class="formContainer">
+        <div class="line1">
+            <mat-form-field>
+                <mat-label>乡镇:</mat-label>
+                <input matInput [matAutocomplete]="autoTown" [(ngModel)]="data.town">
+                <mat-autocomplete #autoTown='matAutocomplete'>
+                    <mat-option *ngFor="let item of towns" [value]=item>{{item}}</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>村庄:</mat-label>
+                <input matInput [(ngModel)]="data.community">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>姓名:</mat-label>
+                <input matInput [(ngModel)]="houseName" [matAutocomplete]="autoName" (input)="onNameChange()">
+                <mat-autocomplete #autoName='matAutocomplete'>
+                    <mat-option *ngFor="let item of names" [value]=item>{{getHouseName(item)}}</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>身份证号:</mat-label>
+                <input matInput [(ngModel)]="data.homeNumber">
+            </mat-form-field>
+
+
+        </div>
+
+        <div class="btn_container">
+            <button mat-raised-button color="accent" (click)=onCancel()>取消</button>
+            <button mat-raised-button color="primary" cdkFocusInitial (click)="onSubmit()">确定</button>
+        </div>
+    </div>
+</div>

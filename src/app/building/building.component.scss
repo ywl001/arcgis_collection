@@ -1,0 +1,40 @@
+.root{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #fff;
+    overflow: auto;
+}
+
+h1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    background-color: #3F51B5;
+    color: white;
+    height: 50px;
+
+}
+.line1 {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    >* {
+        margin-right: 5px;
+    }
+}
+
+.btn_container{
+    display: flex;
+    justify-content:center;
+    align-items: center;
+    margin-top: 30px;
+
+    >*{
+        margin-right: 25px;
+    }
+}
+mat-form-field {
+    margin-bottom: -1em;
+}

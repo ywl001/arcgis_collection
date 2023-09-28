@@ -1,0 +1,10 @@
+{
+    "/arcgis": {
+        "target": "http://114.115.201.238:6080",
+        "secure": false
+    },
+    "/mjinfo":{
+        "target":"http://114.115.201.238",
+        "secure": false
+    }
+}

@@ -1,0 +1,57 @@
+<div class="root">
+    <h1>{{data.building_name}}</h1>
+    <div class="formContainer">
+        <div class="line1">
+            <mat-form-field>
+                <mat-label>乡镇:</mat-label>
+                <input matInput [matAutocomplete]="autoTown" [(ngModel)]="data.town">
+                <mat-autocomplete #autoTown='matAutocomplete'>
+                    <mat-option *ngFor="let item of towns" [value]=item>{{item}}</mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>社区:</mat-label>
+                <input matInput [(ngModel)]="data.community">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>小区名字:</mat-label>
+                <input matInput [(ngModel)]="xiaoqu">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>楼号:</mat-label>
+                <input matInput [(ngModel)]="louhao">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>楼层数:</mat-label>
+                <input matInput [(ngModel)]="data.count_floor" type="number">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>单元数:</mat-label>
+                <input matInput [(ngModel)]="data.count_unit" type="number">
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>每单元户数:</mat-label>
+                <input matInput [(ngModel)]="data.count_home" type="number">
+            </mat-form-field>
+
+            <div style="padding-left: 10px;">
+                排序方式：
+                <mat-radio-group [(ngModel)]="data.sort_type">
+                    <mat-radio-button [value]="1">连续</mat-radio-button>
+                    <mat-radio-button [value]="2">单元</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+
+        <div class="btn_container">
+            <button mat-raised-button color="accent" (click)=onCancel()>取消</button>
+            <button mat-raised-button color="primary" cdkFocusInitial (click)="onSubmit()">确定</button>
+        </div>
+    </div>
+</div>
