@@ -71,6 +71,7 @@ export abstract class BaseGraphicLayer extends GraphicsLayer {
         this.message.editFeature$.subscribe(data => {
             if (data.layerName == this.layerName) {
                 this.applyEdit(data.action, data.feature).then((res) => {
+                    console.log(res)
                     this.refresh()
                 })
             }

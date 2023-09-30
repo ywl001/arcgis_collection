@@ -9,7 +9,8 @@ import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 import TileLayer from "@arcgis/core/layers/TileLayer.js";
 import MapView from "@arcgis/core/views/MapView.js";
 import FeatureLayerView from "@arcgis/core/views/layers/FeatureLayerView.js";
-import { LayerName } from '../app-state/app-state';
+import Swal from 'sweetalert2';
+import { EditAction, EditFeature, LayerName } from '../app-state/app-state';
 import { ServerConfig } from '../config/server.config';
 import { LocalStorgeService } from '../services/local-storge.service';
 import { MessageService } from '../services/message.service';
@@ -104,8 +105,8 @@ export class MapComponent {
     const view = new MapView({
       map: map,
       container: container,
-      ui: {
-        components: []
+      constraints: {
+        rotationEnabled: false
       }
     });
 
@@ -133,22 +134,40 @@ export class MapComponent {
   async onHold(e: __esri.ViewHoldEvent) {
     console.log('hold....')
 
-    if(this.mapScale > 1000){
-      this.mapView.goTo({
-        target:e.mapPoint,
-        zoom:10
-      })
-    }else{
       const screenPoint = {x: e.x,y: e.y};
       const g = await this.identityMap(screenPoint);
       if(!g){
         //添加新房子
+        if(this.mapScale > 1000){
+          this.mapView.goTo({
+            target:e.mapPoint,
+            zoom:10
+          })
+        }
         let g = new Graphic();
         g.geometry = e.mapPoint;
         g.attributes = {layer_name:LayerName.house};
         this.message.selectGraphic(g);
+      }else if(g.attributes.layer_name == LayerName.house && g.attributes.display_level==null){
+        Swal.fire({
+          title: '确实要删除该要素吗？',
+          confirmButtonText: '确定',
+          showCancelButton: true,
+          cancelButtonText: '取消',
+        }).then(result => {
+          if (result.isConfirmed) {
+            const data: EditFeature = {
+              action: EditAction.del,
+              feature: g,
+              layerName: LayerName.house
+            }
+            this.message.editFeature(data)
+          } else if (result.isDismissed) {
+            console.log('cancel')
+          }
+        })
       }
-    }
+    
   }
 
   // mapOver(e: __esri.ViewPointerMoveEvent) {

@@ -1,7 +1,11 @@
 import { Component } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatDialog } from '@angular/material/dialog';
 import { EditAction, EditFeature, LayerName } from '../app-state/app-state';
+import { CompassComponent } from '../compass/compass.component';
 import { PhpFunc } from '../config/phpFunc';
+import { LocalStorgeService } from '../services/local-storge.service';
 import { MessageService } from '../services/message.service';
 import { SqlService } from '../services/sql.service';
 
@@ -16,6 +20,10 @@ export class HouseComponent {
 
   names: any[];
 
+  title:string;
+
+  housNameControl:FormControl = new FormControl('')
+
   getHouseName(item: any) {
     if (item.community) {
       return item.name + ':' + item.community
@@ -24,64 +32,88 @@ export class HouseComponent {
     }
   }
 
-  private _houseName;
-  public get houseName() {
-    return this._houseName;
-  }
-  public set houseName(value) {
-    this._houseName = value;
-    this.data.name = value;
-    console.log(this.houseName)
-  }
-
   private _graphic;
   public get graphic() {
     return this._graphic;
   }
   public set graphic(value) {
     this._graphic = value;
+    console.log('house set data',value.attributes)
     this.data = value.attributes;
+    this.housNameControl.setValue(value.attributes.name);
+    this.setInitValue()
+
     console.log(this.data)
   }
 
-  constructor(private message: MessageService, private sql: SqlService) { }
+  constructor(private message: MessageService, 
+    private sql: SqlService,
+    private dialog:MatDialog,
+    private local:LocalStorgeService) { }
+
+  ngOnInit(){
+    this.housNameControl.valueChanges.subscribe(val=>{
+      if(val.name){
+        this.data.name = val.name
+      }else{
+        this.data.name = val;
+      }
+      if (val.length >= 2) {
+        const data = {
+          inputType: 6,
+          input: val
+        }
+        if (this.isChinese(val)) {
+          this.sql.exec(PhpFunc.selectPeoplesBySearch, data).subscribe(res => {
+            this.names = res;
+          })
+        }
+      }
+    })
+  }
 
   onSubmit() {
     console.log(this.data)
+    const action = this.data.objectid ? EditAction.update : EditAction.add;
+
     const data: EditFeature = {
-      action: EditAction.update,
+      action: action,
       feature: this.graphic,
       layerName: LayerName.house
     }
-    console.log(this.graphic.attributes);
+
+    this.saveLocal()
 
     this.message.editFeature(data);
-
     this.message.clearTopContainer()
-    // this.store.dispatch(action_editFeature({ data: data }))
   }
 
   onCancel() {
     this.message.clearTopContainer();
   }
 
-  onNameChange() {
-    if (this.houseName.length >= 2) {
-      console.log(this.houseName);
-      const data = {
-        inputType: 6,
-        input: this.houseName
-      }
-      if (this.isChinese(this.houseName)) {
-        this.sql.exec(PhpFunc.selectPeoplesBySearch, data).subscribe(res => {
-          this.names = res;
-        })
-      }
+  displayFunc(p){
+    console.log('display func ....')
+    if(typeof p == 'string'){
+      return p;
+    }else{
+      return p?.name
     }
   }
 
   onSelectName(e:MatAutocompleteSelectedEvent){
-    console.log(e.option.value)
+    this.data.home_number = e.option.value.pid
+  }
+
+  onDirectionFocus(){
+    const dialogRef = this.dialog.open(CompassComponent);
+    const compass = dialogRef.componentRef.instance;
+
+    compass.inputAngle = -parseInt(this.data.angle);
+    compass.angle.subscribe(value=>{
+      this.data.angle = -value +'' ;
+      dialogRef.close();
+    })
   }
 
   private isChinese(str: string) {
@@ -89,4 +121,25 @@ export class HouseComponent {
     if (!re.test(str)) return false;
     return true;
   }
+
+  private saveLocal(){
+    this.local.set('town',this.data.town)
+    this.local.set('community',this.data.community)
+    this.local.set('angle',this.data.angle)
+  }
+
+  private setInitValue(){
+    if(!this.data.community){
+      this.data.community = this.local.get('community');
+    }
+
+    if(!this.data.town){
+      this.data.town = this.local.get('town');
+    }
+
+    if(!this.data.angle){
+      this.data.angle = this.local.get('angle');
+    }
+  }
+
 }

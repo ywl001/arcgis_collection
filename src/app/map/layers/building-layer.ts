@@ -1,5 +1,5 @@
 import MapView from "@arcgis/core/views/MapView";
-import { LayerName } from "../../app-state/app-state";
+import { Building, LayerName } from "../../app-state/app-state";
 import { ServerConfig } from "../../config/server.config";
 import { BaseGraphicLayer } from "./base-graphic-layer";
 
@@ -21,7 +21,9 @@ export class BuildingLayer extends BaseGraphicLayer {
         // console.log('building fontsize:',fontsize)
         const offsetX = -(data.name?.length * fontsize / 2) * Math.cos(data.angle * Math.PI / 180);
         const offsetY = -(data.name?.length * fontsize / 2) * Math.sin(data.angle * Math.PI / 180);
-        return this.symbolServices.getFillSymbol(data.name, fontsize, offsetX, offsetY, data.angle, 1, 'one')
+        if(this.isInfoRight(data))
+            return this.symbolServices.getFillSymbol(data.name, fontsize, offsetX, offsetY, data.angle, 1, 'one')
+        return this.symbolServices.getFillSymbol(data.name, fontsize, offsetX, offsetY, data.angle, 1, 'pink')
     }
 
     protected override extentChange(): void {
@@ -48,5 +50,12 @@ export class BuildingLayer extends BaseGraphicLayer {
             return 22;
         }
         return 10;
+    }
+
+    private isInfoRight(data:Building){
+        if(data.name && data.count_floor && data.count_unit && data.count_unit ){
+            return true
+        }
+        return false;
     }
 }

@@ -22,6 +22,7 @@ export enum MessageType {
   providedIn: 'root',
 })
 export class MessageService {
+
   constructor() {}
 
   private _showInfoWindow = new Subject<Type<unknown>>();
@@ -106,6 +107,12 @@ export class MessageService {
   clearTopContainer$ = this._clearTopContainer.asObservable();
   clearTopContainer() {
     this._clearTopContainer.next(null);
+  }
+
+  private _delGraphic = new Subject<Graphic>();
+  delGraphic$ = this._delGraphic.asObservable();
+  delGraphic(g:Graphic) {
+    this._delGraphic.next(g)
   }
 
 }

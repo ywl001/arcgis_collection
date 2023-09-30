@@ -1,6 +1,6 @@
 import { HttpClientModule } from '@angular/common/http';
 import { Injector, NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -8,6 +8,7 @@ import { AppInjector } from './app-injector';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BuildingComponent } from './building/building.component';
+import { CompassComponent } from './compass/compass.component';
 import { HouseComponent } from './house/house.component';
 import { MapComponent } from './map/map.component';
 import { MaterialModule } from './material.module';
@@ -17,7 +18,8 @@ import { MaterialModule } from './material.module';
     AppComponent,
     MapComponent,
     BuildingComponent,
-    HouseComponent
+    HouseComponent,
+    CompassComponent
   ],
   imports: [
     BrowserModule,
@@ -25,6 +27,7 @@ import { MaterialModule } from './material.module';
     MaterialModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule
   ],
   providers: [],

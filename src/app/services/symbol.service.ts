@@ -55,7 +55,8 @@ export class SymbolService {
       ['诊所', 'zhensuo.png'],
       ['学校', 'zhongxiaoxue.png'],
       ['村庄', 'cunzhuang.svg'],
-      ['饭店', 'meishi.png']
+      ['饭店', 'meishi.png'],
+      ['house', 'house_bg.png']
     ])
 
   constructor() {
@@ -104,7 +105,7 @@ export class SymbolService {
     rotation = 0,
     strokeWidth = 1,
     colorPlan: string = 'one') {
-      
+
     let fillColor = this.getColor(colorPlan).fillColor;
     let strokeColor = this.getColor(colorPlan).strokeColor;
 
@@ -124,7 +125,7 @@ export class SymbolService {
     }
   }
 
-  getHouseSymbol_1(content: string,fontsize = 10,offsetX = 0,offsetY = 0,rotation = 0) {
+  getHouseSymbol_1(content: string, fontsize = 10, offsetX = 0, offsetY = 0, rotation = 0) {
     return {
       type: "cim",
       data: {
@@ -139,7 +140,24 @@ export class SymbolService {
     }
   }
 
-  private getPicSymbol(symbol: string, size = 14) {
+  getHouseSymbol_2(content: string, fontsize = 10, rotation = 0, bgSize = 20) {
+    return {
+      type: "cim",
+      data: {
+        type: "CIMSymbolReference",
+        symbol: {
+          type: "CIMPointSymbol",
+          symbolLayers: [
+            this.getTextSymbol(content, fontsize, 0, 0, rotation, 'Center'),
+            this.getPicSymbol('house_bg.png', bgSize, rotation)
+            // this.getHouse(bgSize,rotation)
+          ]
+        }
+      }
+    }
+  }
+
+  private getPicSymbol(symbol: string, size = 14, angle = 0) {
     return {
       type: "CIMPictureMarker",
       enable: true,
@@ -149,12 +167,13 @@ export class SymbolService {
       },
       size: size,
       scaleX: 1,
+      rotation: -angle,
       tintColor: [255, 255, 255, 255],
       url: `assets/symbol/${symbol}`
     }
   }
 
-  public getTextSymbol(content: string, size = 10, offsetX = 8, offsetY = 0, rotation = 0, color = [49, 49, 49, 255], fontFamily = "Microsoft Yahei") {
+  public getTextSymbol(content: string, size = 10, offsetX = 8, offsetY = 0, rotation = 0, h_align = 'Left', color = [49, 49, 49, 255], fontFamily = "Microsoft Yahei") {
     return {
       type: "CIMVectorMarker",
       enable: true,
@@ -178,7 +197,7 @@ export class SymbolService {
           fontFamilyName: fontFamily,
           // fontStyleName: "Bold",
           height: size,
-          horizontalAlignment: "Left",
+          horizontalAlignment: h_align,
           verticalAlignment: "Center",
           offsetX: offsetX,
           offsetY: offsetY,
@@ -247,6 +266,9 @@ export class SymbolService {
     } else if (colorPlan == 'three') {
       fillColor = [254, 250, 203, 128]
       strokeColor = [237, 236, 175, 255]
+    }else if(colorPlan == 'pink'){
+      fillColor = [250,18,178, 128]
+      strokeColor = [250,18,178, 255]
     }
 
     return {
@@ -254,6 +276,138 @@ export class SymbolService {
       strokeColor: strokeColor
     }
 
+  }
+
+  private getHouse(size=18,rotation=0) {
+    return    {
+      "type": "CIMVectorMarker",
+      "enable": true,
+      "anchorPointUnits": "Relative",
+      "dominantSizeAxis3D": "Z",
+      "size": size,
+      "billboardMode3D": "FaceNearPlane",
+      "frame": {
+        "xmin": 0,
+        "ymin": 0,
+        "xmax": 421,
+        "ymax": 285
+      },
+      "markerGraphics": [
+        {
+          "type": "CIMMarkerGraphic",
+          "geometry": {
+            "rings": [
+              [
+                [
+                  55,
+                  185
+                ],
+                [
+                  211,
+                  262
+                ],
+                [
+                  364,
+                  181
+                ],
+                [
+                  364,
+                  20
+                ],
+                [
+                  364,
+                  20
+                ],
+                [
+                  55,
+                  20
+                ],
+                [
+                  55,
+                  185
+                ]
+              ],
+              [
+                [
+                  384,
+                  0
+                ],
+                [
+                  384,
+                  170
+                ],
+                [
+                  411,
+                  156
+                ],
+                [
+                  421,
+                  173
+                ],
+                [
+                  211,
+                  285
+                ],
+                [
+                  125,
+                  242
+                ],
+                [
+                  125,
+                  278
+                ],
+                [
+                  105,
+                  278
+                ],
+                [
+                  105,
+                  232
+                ],
+                [
+                  0,
+                  179
+                ],
+                [
+                  9,
+                  161
+                ],
+                [
+                  35,
+                  175
+                ],
+                [
+                  35,
+                  0
+                ],
+                [
+                  384,
+                  0
+                ]
+              ]
+            ]
+          },
+          "symbol": {
+            "type": "CIMPolygonSymbol",
+            "symbolLayers": [
+              {
+                "type": "CIMSolidFill",
+                "enable": true,
+                "color": [
+                  245,
+                  165,
+                  25,
+                  255
+                ]
+              }
+            ]
+          }
+        }
+      ],
+
+      
+      "rotation": -rotation
+    }
   }
 }
 
