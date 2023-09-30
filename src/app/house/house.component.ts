@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { EditAction, EditFeature, LayerName } from '../app-state/app-state';
 import { PhpFunc } from '../config/phpFunc';
 import { MessageService } from '../services/message.service';
@@ -77,6 +78,10 @@ export class HouseComponent {
         })
       }
     }
+  }
+
+  onSelectName(e:MatAutocompleteSelectedEvent){
+    console.log(e.option.value)
   }
 
   private isChinese(str: string) {
